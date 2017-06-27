@@ -25,10 +25,10 @@ namespace DetectCountOfLanguage
         {
             //    Console.WriteLine("Input full name of file");
             //    string path = Console.ReadLine();
-            string path = @"C:\Users\zviad\Desktop\martin_dzhordzh_pir_stervyatnikov.txt";
+            string path = @"C:\Users\zviad\Desktop\Test(60%Japanese,30%Korean,10%eng).txt";
             Dictionary<string, int> wordCount = new Dictionary<string, int>();
 
-            int threadsCount = 4;
+            int threadsCount = 10;
             //Text model = new Text(path);
             //var a = model.RemoveNumbers(model.DivedetIntoSentences(model.Value));
 
@@ -50,7 +50,7 @@ namespace DetectCountOfLanguage
             Stopwatch w = new Stopwatch();
             w.Start();
             LanguageDetectorWrapper ldw = new LanguageDetectorWrapper(sentences, threadsCount);
-            wordCount = ldw.PytonDetector();
+            wordCount = ldw.DetectLanguageInThreadsNText();
          
             //wordCount = ldw.DetectLanguageInOneThread();
             w.Stop();

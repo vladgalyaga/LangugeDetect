@@ -1,0 +1,31 @@
+
+d:\temp\NTextCat 0.2.1.1\Evaluation>pushd . 
+
+d:\temp\NTextCat 0.2.1.1\Evaluation>cd..
+
+d:\temp\NTextCat 0.2.1.1>echo THE FIRST RESULT IS THE BEST!!! 
+THE FIRST RESULT IS THE BEST!!!
+
+d:\temp\NTextCat 0.2.1.1>NTextCat.exe -noprompt -e=UTF-8  0<Evaluation\english-utf8.txt 
+eng
+
+d:\temp\NTextCat 0.2.1.1>NTextCat.exe -noprompt -e=950  0<Evaluation\chinese-big5.txt 
+zho
+
+d:\temp\NTextCat 0.2.1.1>NTextCat.exe -noprompt -e=UTF-8  0<Evaluation\chinese-utf8.txt 
+zho
+
+d:\temp\NTextCat 0.2.1.1>NTextCat.exe -noprompt -e=Unicode  0<Evaluation\chinese2-1200.txt 
+zho
+jpn
+
+d:\temp\NTextCat 0.2.1.1>NTextCat.exe -noprompt -e=Unicode  0<Evaluation\russian-1200.txt 
+rus
+
+d:\temp\NTextCat 0.2.1.1>NTextCat.exe -noprompt -e=1251  0<Evaluation\russian-1251.txt 
+rus
+
+d:\temp\NTextCat 0.2.1.1>NTextCat.exe -noprompt -e=UTF-8  0<Evaluation\nl-utf8.txt 
+nld
+
+d:\temp\NTextCat 0.2.1.1>popd

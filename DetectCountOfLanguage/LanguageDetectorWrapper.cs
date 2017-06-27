@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using IronPython.Hosting;
 using Microsoft.Scripting.Hosting;
 using System.IO;
+using IvanAkcheurov.NTextCat.Lib;
 
 namespace DetectCountOfLanguage
 {
@@ -139,14 +140,15 @@ namespace DetectCountOfLanguage
                 }
                string lang = ranges.First().
                     FormatData(new StringArrayFormatter()).First();
-                if (m_wordCount.ContainsKey(lang))
-                {
-                    m_wordCount[lang] += count;
-                }
-                else
-                {
-                    m_wordCount.Add(lang, count);
-                }
+                AddPointToLang(lang, count);
+                //if (m_wordCount.ContainsKey(lang))
+                //{
+                //    m_wordCount[lang] += count;
+                //}
+                //else
+                //{
+                //    m_wordCount.Add(lang, count);
+                //}
             }
 
         }
@@ -176,6 +178,57 @@ namespace DetectCountOfLanguage
             throw new NotImplementedException();
         }
 
+        public void DetectNcat(int a)
+        {
+            var factory = new RankedLanguageIdentifierFactory();
+            var identifier = factory.Load("Core14.profile.xml");
+
+            for (int i = a; i < m_text.Count; i += m_threadsCount)
+            {
+                string text = m_text[i];
+
+                int count = Text.GetCountOfWords(text);
+
+                
+                string res = identifier.Identify(text).First().Item1.Iso639_2T;
+
+                AddPointToLang(res, count);
+                //m_wordCount.Add(res)
+               
+            }
+        }
+           // return m_wordCount;
+        
+        public Dictionary<string, int> DetectLanguageInThreadsNText()
+        {
+
+            m_wordCount = new Dictionary<string, int>();
+            List<Task> tasks = new List<Task>();
+
+            for (int i = 0; i < m_threadsCount; i++)
+            {
+                int a = i;
+                Task t = new Task(() => DetectNcat(a));
+                tasks.Add(t);
+                t.Start();
+            }
+            Task.WaitAll(tasks.ToArray());
+
+            return m_wordCount;
+        }
+
+
+        private void AddPointToLang(string lang, int count)
+        {
+            if (m_wordCount.ContainsKey(lang))
+            {
+                m_wordCount[lang] += count;
+            }
+            else
+            {
+                m_wordCount.Add(lang, count);
+            }
+        }
 
     }
 }

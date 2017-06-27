@@ -25,7 +25,7 @@ namespace DetectCountOfLanguage
         {
             //    Console.WriteLine("Input full name of file");
             //    string path = Console.ReadLine();
-            string path = @"C:\Users\zviad\Desktop\Test(60%Japanese,30%Korean,10%eng).txt";
+            string path = @"C:\Users\zviad\Desktop\Test(66%Japanese,33%Korean,1%eng).txt";
             Dictionary<string, int> wordCount = new Dictionary<string, int>();
 
             int threadsCount = 10;
@@ -42,7 +42,6 @@ namespace DetectCountOfLanguage
 
             Text model = new Text();
             string text = model.ReadFile(path);
-
             text = model.RemoveNumbers(text);
             List<string> sentences = model.DivedetIntoSentences(text);
             sentences = model.RemovePunctuation(sentences);
@@ -50,51 +49,50 @@ namespace DetectCountOfLanguage
             Stopwatch w = new Stopwatch();
             w.Start();
             LanguageDetectorWrapper ldw = new LanguageDetectorWrapper(sentences, threadsCount);
+
             wordCount = ldw.DetectLanguageInThreadsNText();
-         
+
+           
+
             //wordCount = ldw.DetectLanguageInOneThread();
             w.Stop();
             Console.WriteLine(w.ElapsedMilliseconds);
-            //foreach (var s in sentences)
-            //{
-            //    int count = model.GetCountOfWords(s);
-
-            //    LanguageDetector ld = new LanguageDetector();
-            //    string lanCode = ld.Detect(s);
-            //    string languageNaturalName;
-            //    if (lanCode == null)
-            //    {
-            //        languageNaturalName = "Not detected";
-            //    }
-            //    else
-            //    {
-            //        languageNaturalName = ld.GetLanguageNameByCode(lanCode);
-            //    }
-
-            //    if (wordCount.ContainsKey(languageNaturalName))
-            //    {
-            //        wordCount[languageNaturalName] += count;
-            //    }
-            //    else
-            //    {
-            //        wordCount.Add(languageNaturalName, count);
-            //    }
-
-            //}
+          
             foreach (var t in wordCount)
             {
                 Console.WriteLine(t.Key + " = " + t.Value);
             }
 
+            Console.WriteLine(model.CountOfNumber);
 
 
 
 
-            //LanguageDetector ld = new LanguageDetector();
-            //string lanCode = ld.Detect(" Кит Харриман вот уже двенадцать лет возглавлявший Исследовательский центр фирмы «Юнайтед Стейтс Роботс энд Мекэникл Мен Корпорейшн», совершенно не был уверен, что поступает правильно. Он провел кончиком языка по пухлым, но довольно бледным губам, и ему показалось, что голографическое изображение великой Сьюзен Кэлвин, сурово взиравшей на него сверху вниз, никогда еще не было таким хмурым. Обычно он загораживал чем - нибудь голографию величайшего в истории робопсихолога, потому что она действовала ему на нервы.Однако на сей раз он не осмелился даже на это, и ее пронзительный умерший взгляд буравил ему щеку.");
-            //if (lanCode == null) throw new Exception("Cannot detect language");
-            //string languageNaturalName = ld.GetLanguageNameByCode(lanCode); //returns "English" for language
-            //Console.WriteLine(languageNaturalName);
+
+
+            Text model1 = new Text();
+            string text1 = model.ReadFile(path);
+            text1 = model.RemoveNumbers(text1);
+            List<string> sentences1 = model.DivedetIntoSentences(text1);
+            sentences1 = model1.RemovePunctuation(sentences1);
+
+            Stopwatch w1 = new Stopwatch();
+            w1.Start();
+            LanguageDetectorWrapper ldw1 = new LanguageDetectorWrapper(sentences1, threadsCount);
+
+            wordCount = ldw1.NewDetector();
+
+
+
+            //wordCount = ldw.DetectLanguageInOneThread();
+            w1.Stop();
+            Console.WriteLine(w1.ElapsedMilliseconds);
+
+            foreach (var t in wordCount)
+            {
+                Console.WriteLine(t.Key + " = " + t.Value);
+            }
+
             Console.WriteLine(model.CountOfNumber);
 
             Console.ReadKey();

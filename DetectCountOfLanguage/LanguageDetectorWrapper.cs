@@ -97,9 +97,10 @@ namespace DetectCountOfLanguage
 
             string text = String.Join(" ", oldText, m_text[0]);
             m_text.RemoveAt(0);
-            int count = Text.GetCountOfWords(text);
+            
 
             string lanCode = ld.Detect(text);
+        
             string languageNaturalName = null;
             if (lanCode == null)
             {
@@ -110,15 +111,9 @@ namespace DetectCountOfLanguage
             {
                 languageNaturalName = ld.GetLanguageNameByCode(lanCode);
             }
-            if (m_wordCount.ContainsKey(languageNaturalName))
-            {
-                m_wordCount[languageNaturalName] += count;
-
-            }
-            else
-            {
-                m_wordCount.Add(languageNaturalName, count);
-            }
+            int count = GetCountOfWords(text, languageNaturalName);
+            AddPointToLang(text, count);
+           
             return languageNaturalName;
 
 
@@ -127,8 +122,8 @@ namespace DetectCountOfLanguage
         {
             string text = String.Join(" ", oldText, m_text[0]);
             m_text.RemoveAt(0);
-           
-            int count = Text.GetCountOfWords(text);
+
+          
             var languageDetection = new MappingService(MappingAvailableServices.LanguageDetection);
             using (MappingPropertyBag bag = languageDetection.RecognizeText(text, null))
             {
@@ -138,8 +133,9 @@ namespace DetectCountOfLanguage
 
                     return;
                 }
-               string lang = ranges.First().
-                    FormatData(new StringArrayFormatter()).First();
+                string lang = ranges.First().
+                     FormatData(new StringArrayFormatter()).First();
+                int count = GetCountOfWords(text, lang);
                 AddPointToLang(lang, count);
                 //if (m_wordCount.ContainsKey(lang))
                 //{
@@ -157,7 +153,7 @@ namespace DetectCountOfLanguage
             while (m_text.Count > 0)
             {
                 NewDetector(null);
-               
+
             }
             return m_wordCount;
         }
@@ -167,16 +163,18 @@ namespace DetectCountOfLanguage
             var engine = Python.CreateEngine();
             ScriptScope scope = engine.CreateScope();
 
-           
+
 
             engine.ExecuteFile(@"..\..\langdetect-1.0.7\langdetect\detector_factory.py");
-           dynamic function = scope.GetVariable("detect");
+            dynamic function = scope.GetVariable("detect");
 
             dynamic result = function(m_text[1]);
 
 
             throw new NotImplementedException();
         }
+
+
 
         public void DetectNcat(int a)
         {
@@ -187,18 +185,18 @@ namespace DetectCountOfLanguage
             {
                 string text = m_text[i];
 
-                int count = Text.GetCountOfWords(text);
 
-                
+
+
                 string res = identifier.Identify(text).First().Item1.Iso639_2T;
-
+                int count = GetCountOfWords(text, res);
                 AddPointToLang(res, count);
                 //m_wordCount.Add(res)
-               
+
             }
         }
-           // return m_wordCount;
-        
+        // return m_wordCount;
+
         public Dictionary<string, int> DetectLanguageInThreadsNText()
         {
 
@@ -230,5 +228,20 @@ namespace DetectCountOfLanguage
             }
         }
 
+        private int GetCountOfWords(string text, string langugeName)
+        {
+            if (langugeName == "jpn" || langugeName == "kor"
+                || "ko" == langugeName || "ja" == langugeName
+                || langugeName =="Korean" || langugeName == "Japanese"
+                )
+            {
+                return Text.GetCountOfChars(text);
+            }
+            else
+            {
+                return Text.GetCountOfWords(text);
+            }
+
+        }
     }
 }

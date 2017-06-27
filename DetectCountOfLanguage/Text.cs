@@ -45,7 +45,7 @@ namespace DetectCountOfLanguage
 
             List<string> words = tmp.Where(w =>
             w.Any(c => Char.IsLetter(c)) || w.All(c => !Char.IsDigit(c))).ToList();
-            CountOfNumber += tmp.Count - words.Count;
+            CountOfNumber = tmp.Count - words.Count;
 
             string result = String.Join(" ", words.ToArray());
 
@@ -89,11 +89,12 @@ namespace DetectCountOfLanguage
 
         public static int GetCountOfWords(string text)
         {
-            string[] textArray = text.Split(new char[] { ' ' });
-
-            return textArray.Length;
+            return text.Split(new char[] { ' ' }).Length;
         }
-
+        public static int GetCountOfChars(string text)
+        {
+            return text.Length;
+        }
 
     }
 
